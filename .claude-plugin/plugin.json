@@ -1,0 +1,10 @@
+{
+  "name": "unslop-ko",
+  "version": "0.1.0",
+  "description": "한국어 글에서 AI가 쓴 티를 지운다. 진단, 윤문, 점검 에이전트 세 개와 숫자 대조 스크립트로 뜻을 지키면서 고친다.",
+  "author": { "name": "ProblmZro" },
+  "homepage": "https://github.com/ProblmZro/unslop-ko",
+  "repository": "https://github.com/ProblmZro/unslop-ko",
+  "license": "MIT",
+  "keywords": ["korean", "writing", "ai-slop", "humanizer", "윤문"]
+}

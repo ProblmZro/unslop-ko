@@ -1,0 +1,17 @@
+{
+  "name": "unslop-ko",
+  "owner": { "name": "ProblmZro" },
+  "metadata": {
+    "description": "한국어 글에서 AI가 쓴 티를 지우는 unslop-ko 플러그인",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "unslop-ko",
+      "source": "./",
+      "description": "한국어 글에서 AI가 쓴 티를 지운다. 진단, 윤문, 점검 에이전트 세 개와 숫자 대조 스크립트로 뜻을 지키면서 고친다.",
+      "version": "0.1.0",
+      "keywords": ["korean", "writing", "ai-slop", "humanizer", "윤문"]
+    }
+  ]
+}
