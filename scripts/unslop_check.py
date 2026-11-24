@@ -4,7 +4,8 @@
   python3 unslop_check.py count  원문.txt
   python3 unslop_check.py compare 원문.txt 고친글.txt
 
-count   기호 개수와 고를 길(short 또는 full)을 JSON으로 낸다.
+count   기호와 그 밖의 AI 티 개수, 고를 길(short 또는 full)을 JSON으로 낸다.
+        길은 글자 수로만 고른다. 500자 이하면 short, 넘으면 full이다.
 compare 원문에만 있는 숫자, 고친 글에만 있는 숫자, 기호 개수, 바뀐 비율을 낸다.
         숫자가 어긋나면 종료 코드 1, 바뀐 비율이 50%를 넘으면 2.
 """
@@ -17,7 +18,8 @@ from collections import Counter
 MARKS = "·→—"
 NUM = re.compile(r"\d+(?:[.,:/~]\d+)*%?")
 SHORT_MAX_CHARS = 500
-SHORT_MAX_MARKS = 5
+BOLD_LEAD = re.compile(r"^\s*(?:[-*]\s+)?\*\*[^*\n]+\*\*", re.M)
+LABEL_LINE = re.compile(r"^\s*(?:[-*]\s+)?[^\s:：|][^:：|\n]{0,14}[:：]\s+\S", re.M)
 
 
 def read(path):
@@ -33,12 +35,22 @@ def nums(text):
     return Counter(NUM.findall(text))
 
 
+def others(text):
+    """기호 말고 눈으로 놓치기 쉬운 AI 티. 진단 에이전트에게 참고로 넘긴다."""
+    return {
+        "bold_lead": len(BOLD_LEAD.findall(text)),
+        "parenthesis": text.count("("),
+        "label_line": len(LABEL_LINE.findall(text)),
+        "not_x_but_y": text.count("아니라"),
+        "quote_pair": (text.count('"') + text.count("“") + text.count("”")) // 2,
+    }
+
+
 def count(path):
     text = read(path)
     m = marks(text)
-    total = sum(m.values())
-    short = len(text) <= SHORT_MAX_CHARS or total <= SHORT_MAX_MARKS
-    return {"chars": len(text), "marks": m, "mark_total": total, "route": "short" if short else "full"}, 0
+    route = "short" if len(text) <= SHORT_MAX_CHARS else "full"
+    return {"chars": len(text), "marks": m, "mark_total": sum(m.values()), "others": others(text), "route": route}, 0
 
 
 def compare(before_path, after_path):
